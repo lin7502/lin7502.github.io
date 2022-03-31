@@ -155,7 +155,7 @@
     <img class="site-author-image" itemprop="image" alt="Minix"
       src="/images/avatar.png">
   <p class="site-author-name" itemprop="name">Minix</p>
-  <div class="site-description" itemprop="description">别做烂人</div>
+  <div class="site-description" itemprop="description">别当烂人</div>
 </div>
 <div class="site-state-wrap site-overview-item animated">
   <nav class="site-state">
@@ -164,6 +164,16 @@
           <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
@@ -210,7 +220,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="Min's blog">
-      <meta itemprop="description" content="别做烂人">
+      <meta itemprop="description" content="别当烂人">
     </span>
     
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
@@ -309,6 +319,7 @@
 
 
 
+    <div class="comments gitalk-container"></div>
 </div>
   </main>
 
@@ -366,6 +377,10 @@
 
 
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"lin7502","repo":"comments","client_id":"d71d5bf9990fb1ee6b55","client_secret":"caab0d3b0b024c5929734e705215937d28f6c860","admin_user":"lin7502","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"0c4c9d5368bd15a211b7d157ccf0c003"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
 
 </body>
 </html>

@@ -23,7 +23,12 @@
   <entry>
     <title>test</title>
     <url>/2022/03/30/test/</url>
-    <content><![CDATA[<p>#这是我的site</p>
-]]></content>
+    <content><![CDATA[<h1 id="这是我的site"><a href="#这是我的site" class="headerlink" title="这是我的site"></a>这是我的site</h1>]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>web前端</tag>
+      </tags>
   </entry>
 </search>
