@@ -2923,7 +2923,7 @@ hr {
   vertical-align: middle;
 }
 .links-of-author a::before {
-  background: #904917;
+  background: #7f9100;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
