@@ -1,5 +1,5 @@
-https://mintag.xyz/tags/index.html
 https://mintag.xyz/schedule/index.html
+https://mintag.xyz/tags/index.html
 https://mintag.xyz/categories/index.html
 https://mintag.xyz/2022/03/30/test/
 https://mintag.xyz/2022/03/29/hello-world/
