@@ -2595,6 +2595,13 @@ mark.search-keyword {
   line-height: 2.4;
   margin: 0;
 }
+mjx-container[jax='CHTML'][display='true'],
+.has-jax {
+  overflow: auto hidden;
+}
+mjx-container[display='true'] + br {
+  display: none;
+}
 .use-motion .animated {
   animation-fill-mode: none;
   visibility: inherit;
@@ -2858,7 +2865,7 @@ hr {
   transition: all 0.2s ease-in-out;
 }
 .links-of-author a::before {
-  background: #0158a3;
+  background: #547e2b;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);

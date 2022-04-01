@@ -1,8 +1,8 @@
 https://mintag.xyz/schedule/index.html
 https://mintag.xyz/tags/index.html
 https://mintag.xyz/categories/index.html
-https://mintag.xyz/2022/03/30/test/
-https://mintag.xyz/2022/03/29/hello-world/
+https://mintag.xyz/2022/03/30/385d8ea6ba44/
+https://mintag.xyz/2022/03/29/fd1ac3e8b6d3/
 https://mintag.xyz/
 https://mintag.xyz/tags/tag1/
 https://mintag.xyz/tags/tag2/
