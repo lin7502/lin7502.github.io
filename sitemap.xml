@@ -49,7 +49,7 @@
 
   <url>
     <loc>https://mintag.xyz/</loc>
-    <lastmod>2022-03-31</lastmod>
+    <lastmod>2022-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -57,21 +57,21 @@
   
   <url>
     <loc>https://mintag.xyz/tags/tag1/</loc>
-    <lastmod>2022-03-31</lastmod>
+    <lastmod>2022-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mintag.xyz/tags/tag2/</loc>
-    <lastmod>2022-03-31</lastmod>
+    <lastmod>2022-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mintag.xyz/tags/tag3/</loc>
-    <lastmod>2022-03-31</lastmod>
+    <lastmod>2022-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -80,49 +80,49 @@
   
   <url>
     <loc>https://mintag.xyz/categories/Sports/</loc>
-    <lastmod>2022-03-31</lastmod>
+    <lastmod>2022-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mintag.xyz/categories/Sports/Baseball/</loc>
-    <lastmod>2022-03-31</lastmod>
+    <lastmod>2022-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mintag.xyz/categories/MLB/</loc>
-    <lastmod>2022-03-31</lastmod>
+    <lastmod>2022-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mintag.xyz/categories/MLB/American-League/</loc>
-    <lastmod>2022-03-31</lastmod>
+    <lastmod>2022-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mintag.xyz/categories/MLB/American-League/Boston-Red-Sox/</loc>
-    <lastmod>2022-03-31</lastmod>
+    <lastmod>2022-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mintag.xyz/categories/MLB/American-League/New-York-Yankees/</loc>
-    <lastmod>2022-03-31</lastmod>
+    <lastmod>2022-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://mintag.xyz/categories/Rivalries/</loc>
-    <lastmod>2022-03-31</lastmod>
+    <lastmod>2022-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
