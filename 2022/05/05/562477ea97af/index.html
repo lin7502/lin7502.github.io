@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.1.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mintag.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.14.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"بحث...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文主要整合了一些分别基于线性递归的伪随机数算法和基于密码安全的伪随机数算法原理，部分算法有代码实现。其中包括了：平方取中法、LCG算法(混合同余法、乘同余法、素数模乘同余法)、基于LSFR的梅森旋转算法、 xorshift生成器家族和WELL家族的生成器；分组密码(ECB, CBC, CTR, CFB, OFB)、 微软的密码学应用编程接口函数CryptGenRandom，Yarrow a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="随机数算法原理整合(X种)">
+<meta property="og:url" content="https://mintag.xyz/2022/05/05/562477ea97af/index.html">
+<meta property="og:site_name" content="Min&#39;s blog">
+<meta property="og:description" content="本文主要整合了一些分别基于线性递归的伪随机数算法和基于密码安全的伪随机数算法原理，部分算法有代码实现。其中包括了：平方取中法、LCG算法(混合同余法、乘同余法、素数模乘同余法)、基于LSFR的梅森旋转算法、 xorshift生成器家族和WELL家族的生成器；分组密码(ECB, CBC, CTR, CFB, OFB)、 微软的密码学应用编程接口函数CryptGenRandom，Yarrow a">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-05-05T04:53:14.000Z">
+<meta property="article:modified_time" content="2022-05-22T23:54:30.934Z">
+<meta property="article:author" content="Minix">
+<meta property="article:tag" content="-random number">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mintag.xyz/2022/05/05/562477ea97af/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://mintag.xyz/2022/05/05/562477ea97af/","path":"2022/05/05/562477ea97af/","title":"随机数算法原理整合(X种)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>随机数算法原理整合(X种) | Min's blog</title>
+  
+
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="تشغيل شريط التصفح" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Min's blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">锲而舍之，朽木不折</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="بحث" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>الوسوم<span class="badge">1</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>التصنيفات<span class="badge">2</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>الأرشيفات<span class="badge">3</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          المحتويات
+        </li>
+        <li class="sidebar-nav-overview">
+          عام
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%BA%BF%E6%80%A7%E9%80%92%E5%BD%92%E7%9A%84%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%AE%97%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">基于线性递归的随机数算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%B9%B3%E6%96%B9%E5%8F%96%E4%B8%AD%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">一、平方取中法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8Clcg%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">二、LCG算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E5%90%8C%E4%BD%99%E6%B3%95"><span class="nav-number">1.2.1.</span> <span class="nav-text">混合同余法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B9%98%E5%90%8C%E4%BD%99%E6%B3%95"><span class="nav-number">1.2.2.</span> <span class="nav-text">乘同余法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B4%A0%E6%95%B0%E6%A8%A1%E4%B9%98%E5%90%8C%E4%BD%99%E6%B3%95"><span class="nav-number">1.2.3.</span> <span class="nav-text">素数模乘同余法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%9F%BA%E4%BA%8Elsfr%E7%9A%84%E6%A2%85%E6%A3%AE%E6%97%8B%E8%BD%AC%E7%AE%97%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">三、基于LSFR的梅森旋转算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9Bxorshift%E7%94%9F%E6%88%90%E5%99%A8%E5%AE%B6%E6%97%8F"><span class="nav-number">1.4.</span> <span class="nav-text">四、xorshift生成器家族</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94well%E5%AE%B6%E6%97%8F%E7%9A%84%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">1.5.</span> <span class="nav-text">五、WELL家族的生成器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%AF%86%E7%A0%81%E5%AE%89%E5%85%A8%E7%9A%84%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">基于密码安全的伪随机数算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81"><span class="nav-number">2.1.</span> <span class="nav-text">一、分组密码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ecb"><span class="nav-number">2.1.1.</span> <span class="nav-text">ECB</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cbc"><span class="nav-number">2.1.2.</span> <span class="nav-text">CBC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ctr"><span class="nav-number">2.1.3.</span> <span class="nav-text">CTR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cfb"><span class="nav-number">2.1.4.</span> <span class="nav-text">CFB</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ofb"><span class="nav-number">2.1.5.</span> <span class="nav-text">OFB</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%BE%AE%E8%BD%AF%E7%9A%84%E5%AF%86%E7%A0%81%E5%AD%A6%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B%E6%8E%A5%E5%8F%A3%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.</span> <span class="nav-text">二、微软的密码学应用编程接口函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cryptgenrandom"><span class="nav-number">2.2.1.</span> <span class="nav-text">CryptGenRandom</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#yarrow-algorithm"><span class="nav-number">2.2.2.</span> <span class="nav-text">Yarrow algorithm</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fortuna"><span class="nav-number">2.2.3.</span> <span class="nav-text">Fortuna</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E5%9F%BA%E4%BA%8E%E6%95%B0%E5%AD%A6%E9%9A%BE%E9%A2%98%E5%81%87%E8%AE%BE%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.3.</span> <span class="nav-text">三、基于数学难题假设的设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#micalischnorr-generator"><span class="nav-number">2.3.1.</span> <span class="nav-text">Micali–Schnorr generator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#naor-reingold%E4%BC%AA%E9%9A%8F%E6%9C%BA%E5%87%BD%E6%95%B0"><span class="nav-number">2.3.2.</span> <span class="nav-text">Naor-Reingold伪随机函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#blum-blum-shub%E7%AE%97%E6%B3%95"><span class="nav-number">2.3.3.</span> <span class="nav-text">Blum Blum Shub算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dual_ec_drbg"><span class="nav-number">2.3.4.</span> <span class="nav-text">Dual_EC_DRBG</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Minix"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Minix</p>
+  <div class="site-description" itemprop="description">别当烂人</div>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lin7502" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lin7502" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xum7502@gmail.com" title="E-Mail → mailto:xum7502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://mintag.xyz/2022/05/05/562477ea97af/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Minix">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Min's blog">
+      <meta itemprop="description" content="别当烂人">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="随机数算法原理整合(X种) | Min's blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          随机数算法原理整合(X种)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">نُشر في</span>
+
+      <time title="أُنشأ: 2022-05-05 12:53:14" itemprop="dateCreated datePublished" datetime="2022-05-05T12:53:14+08:00">2022-05-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">عُدل في</span>
+      <time title="عُدل: 2022-05-23 07:54:30" itemprop="dateModified" datetime="2022-05-23T07:54:30+08:00">2022-05-23</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="عدد الحروف في المقال">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">عدد الحروف في المقال: </span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="زمن القراءة">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">زمن القراءة &asymp;</span>
+      <span>2 دقائق.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文主要整合了一些分别基于线性递归的伪随机数算法和基于密码安全的伪随机数算法原理，部分算法有代码实现。其中包括了：平方取中法、LCG算法(混合同余法、乘同余法、素数模乘同余法)、基于LSFR的梅森旋转算法、
+xorshift生成器家族和WELL家族的生成器；分组密码(ECB, CBC, CTR, CFB,
+OFB)、 微软的密码学应用编程接口函数CryptGenRandom，Yarrow
+algorithm、Fortuna、Micali–Schnorr
+generator、Naor-Reingold伪随机函数、Blum Blum
+Shub算法、Dual_EC_DRBG。</p>
+<span id="more"></span>
+<h2 id="基于线性递归的随机数算法">基于线性递归的随机数算法</h2>
+<h3 id="一平方取中法">一、平方取中法</h3>
+<h3 id="二lcg算法">二、LCG算法</h3>
+<h4 id="混合同余法">混合同余法</h4>
+<p>1 对随机数列<span class="math inline">\(\{R_n, \ n = 1, \, 2, \, ...,
+\, N\}\)</span> 计算</p>
+<p><span class="math display">\[\bar{R}=\frac{1}{N} \sum_{n=1}^{N} R_n,
+\ \ \bar{R^2}=\frac{1}{N} \sum_{n=1}^{N}R_n^2, \ \ S^2=\frac{1}{N}
+\sum_{n=1}^{N}(R_n-\frac{1}{2})^2\]</span>
+假设我们产生的随机数的样本足够多，则 <span class="math inline">\(N
+\longrightarrow \infty\)</span> 时这三个统计量均渐近服从正态分布，可以用
+Z 检验法检验这三个统计量与理论期望值的偏离程度。</p>
+<p>2 把 [0, 1] 等分成 k 段，用拟合优度卡方检验法检验 <span
+class="math inline">\(\{R_n, \ n = 1, \, 2, \, ..., \, N\}\)</span>
+落在每一段的取值概率是否近似为 1/k。</p>
+<p>3 用 Kolmogorov-Smirnov 检验法进行拟合优度检验，看 <span
+class="math inline">\(\{R_n, \ n = 1, \, 2, \, ..., \, N\}\)</span>
+是否与 U[0,1] 分布相符。 4 把 <span class="math inline">\(\{R_n, \ n =
+1, \, 2, \, ..., \, N\}\)</span> 每 d 个组合在一起成为$ R^d$
+向量，把超立方体 {[0, 1]}^d 每一维均分为 k 份，得到 $k^d
+$个子集，用卡方检验法检验组合得到的 R^d 向量落在每个子集的概率是否近似为
+<span class="math inline">\(k^{−d}\)</span>。 5 把 <span
+class="math inline">\(\{R_n, \ n = 1, \, 2, \, ..., \, N\}\)</span>
+看作时间序列样本，计算其样本自相关函数列 <span
+class="math inline">\(\{\rho_j, \ j = 1, \, 2, \, ..., \, N\}，在 \{R_n,
+\ n = 1, \, 2, \, ..., \, N\}\)</span> 独立同分布情况下 <span
+class="math inline">\(\{\sqrt{N} \rho_j, \ j = 1, \, 2, \, ..., \,
+N\}\)</span> 应该渐近服从独立的标准正态分布。 6 把 <span
+class="math inline">\(\{R_n\}\)</span> 离散化为 <span
+class="math inline">\(y_n = floor(kR_n)\)</span>, <span
+class="math inline">\(\ n = 1, \, 2, \, ..., \, N\)</span>, 令 <span
+class="math inline">\(\xi_n = y_n, \, \eta_n = y_n+b（b 为正整数），n =
+1, \, 2, \, ..., \, N − b\)</span>, 用列联表检验法检验 <span
+class="math inline">\(\xi_n\)</span> 和 <span
+class="math inline">\(\eta_n\)</span> 的独立性。 7 扑克检验。把 <span
+class="math inline">\(\{R_n\}\)</span> 离散化为 <span
+class="math inline">\(y_n = floor(8R_n)\)</span>, <span
+class="math inline">\(\, n = 1, \, 2, \, ..., \, N,\)</span>
+然后每连续的 8 个作为一组，计数每组内不同数字的个数（1 ∼ 8 个）。在
+<span class="math inline">\(\{R_n\}\)</span>
+独立同均匀分布条件下每组内不同数字个数的理论分布概率可以计算出来，然后用卡方检验法检验实际观测与理论概率是否相符。
+8 配套检验。<span class="math inline">\(\{R_n\}\)</span> 离散化为 <span
+class="math inline">\(y_n = floor(kR_n)\)</span> （k 为正整数），<span
+class="math inline">\(n = 1, \, 2, \, ..., \, N\)</span>, 然后顺序抽取
+<span class="math inline">\(\{y_n, \ n = 1, \, 2, \, ..., \,
+N\}\)</span> 直到 <span class="math inline">\(\{y_n\}\)</span>
+的可能取值 <span class="math inline">\(\{0, \, 1, \, ..., \, k −
+1\}\)</span> 都出现过为止，记录需要抽取的 <span
+class="math inline">\(\{y_n\}\)</span> 的个数
+L，反复抽取并记录配齐数字需要抽取的值的个数 $l_j , j = 1, , 2, , ...
+$。在 <span class="math inline">\(\{R_n\}\)</span> 独立同 U(0,1)
+分布条件下这样的 L 分布可以得到，可以计算 <span
+class="math inline">\(\{l_j\}\)</span>
+的平均值并用渐近正态分布检验观测均值与理论均值的差异大小，或直接用卡方检验法比较
+<span class="math inline">\(\{l_j\}\)</span>的样本频数与理论期望值。 9
+正负连检验。令 <span class="math inline">\(y_n = R_n −
+1/2\)</span>，把连续的 <span class="math inline">\(\{y_n\}\)</span>
+的正值分为一段，把连续的 <span class="math inline">\(\{y_n\}\)</span>
+的负值分为一段，每段叫做一个 “连”，连长 L 的分布概率为 P(L = k) = <span
+class="math inline">\(2^{−k}, \ k = 1, \, 2, \,
+...\)</span>，可以用卡方检验法检验 L 的分布；总连数 T 满足</p>
+<p><span class="math inline">\(ET = (n+1)/2 \quad Var(T) =
+(n−1)/4\)</span> 也可以用 Z 检验法检验 T 的值与理论期望的差距。</p>
+<p>10 升降连检验。计算 <span class="math inline">\(y_n = R_n − R_{n−1},
+\ n = 2, \, 3, \, ..., \, N\)</span>，把连续的正值的 <span
+class="math inline">\(\{y_n\}\)</span>
+分为一段叫做一个上升连，把连续的负值的 <span
+class="math inline">\(\{y_n\}\)</span>
+分为一段叫做一个下降连，可以用卡方检验法比较连的长度与 <span
+class="math inline">\(\{R_n\}\)</span>S 独立同分布假设下的理论分布，或用
+Z 检验法比较总连数与理论期望值的差距。</p>
+<h4 id="乘同余法">乘同余法</h4>
+<h4 id="素数模乘同余法">素数模乘同余法</h4>
+<h3 id="三基于lsfr的梅森旋转算法">三、基于LSFR的梅森旋转算法</h3>
+<h3 id="四xorshift生成器家族">四、xorshift生成器家族</h3>
+<h3 id="五well家族的生成器">五、WELL家族的生成器</h3>
+<h2 id="基于密码安全的伪随机数算法">基于密码安全的伪随机数算法</h2>
+<h3 id="一分组密码">一、分组密码</h3>
+<h4 id="ecb">ECB</h4>
+<h4 id="cbc">CBC</h4>
+<h4 id="ctr">CTR</h4>
+<h4 id="cfb">CFB</h4>
+<h4 id="ofb">OFB</h4>
+<h3
+id="二微软的密码学应用编程接口函数">二、微软的密码学应用编程接口函数</h3>
+<h4 id="cryptgenrandom">CryptGenRandom</h4>
+<h4 id="yarrow-algorithm">Yarrow algorithm</h4>
+<h4 id="fortuna">Fortuna</h4>
+<h3 id="三基于数学难题假设的设计">三、基于数学难题假设的设计</h3>
+<h4 id="micalischnorr-generator">Micali–Schnorr generator</h4>
+<h4 id="naor-reingold伪随机函数">Naor-Reingold伪随机函数</h4>
+<h4 id="blum-blum-shub算法">Blum Blum Shub算法</h4>
+<h4 id="dual_ec_drbg">Dual_EC_DRBG</h4>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    تبرّع
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="Minix WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="Minix Alipay">
+        <span>Alipay</span>
+      </div>
+      <div>
+        <img src="/images/paypal.png" alt="Minix PayPal">
+        <span>PayPal</span>
+      </div>
+
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/random-number/" rel="tag"><i class="fa fa-tag"></i> -random number</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/05/06/a2d69ed68686/" rel="next" title="test">
+                  test <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-dragon"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Minix</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>مُجمل عدد الحروف: </span>
+    <span title="مُجمل عدد الحروف">4k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>مُجمل زمن القراءة &asymp;</span>
+    <span title="مُجمل زمن القراءة">4 دقائق.</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
