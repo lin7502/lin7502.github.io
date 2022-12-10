@@ -1,112 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>随机数算法原理整合(X种)</title>
-    <url>/2022/05/05/562477ea97af/</url>
-    <content><![CDATA[<p>本文主要整合了一些分别基于线性递归的伪随机数算法和基于密码安全的伪随机数算法原理，部分算法有代码实现。其中包括了：平方取中法、LCG算法(混合同余法、乘同余法、素数模乘同余法)、基于LSFR的梅森旋转算法、
-xorshift生成器家族和WELL家族的生成器；分组密码(ECB, CBC, CTR, CFB,
-OFB)、 微软的密码学应用编程接口函数CryptGenRandom，Yarrow
-algorithm、Fortuna、Micali–Schnorr
-generator、Naor-Reingold伪随机函数、Blum Blum
-Shub算法、Dual_EC_DRBG。</p>
+    <title>Restart</title>
+    <url>/2022/05/27/8b221b533cba/</url>
+    <content><![CDATA[<p>临近毕业，找到了一家在外企的外包工作，还算是有了着落。</p>
 <span id="more"></span>
-<h2 id="基于线性递归的随机数算法">基于线性递归的随机数算法</h2>
-<h3 id="一平方取中法">一、平方取中法</h3>
-<h3 id="二lcg算法">二、LCG算法</h3>
-<h4 id="混合同余法">混合同余法</h4>
-<p>1 对随机数列<span class="math inline">\(\{R_n, \ n = 1, \, 2, \, ...,
-\, N\}\)</span> 计算</p>
-<p><span class="math display">\[\bar{R}=\frac{1}{N} \sum_{n=1}^{N} R_n,
-\ \ \bar{R^2}=\frac{1}{N} \sum_{n=1}^{N}R_n^2, \ \ S^2=\frac{1}{N}
-\sum_{n=1}^{N}(R_n-\frac{1}{2})^2\]</span>
-假设我们产生的随机数的样本足够多，则 <span class="math inline">\(N
-\longrightarrow \infty\)</span> 时这三个统计量均渐近服从正态分布，可以用
-Z 检验法检验这三个统计量与理论期望值的偏离程度。</p>
-<p>2 把 [0, 1] 等分成 k 段，用拟合优度卡方检验法检验 <span
-class="math inline">\(\{R_n, \ n = 1, \, 2, \, ..., \, N\}\)</span>
-落在每一段的取值概率是否近似为 1/k。</p>
-<p>3 用 Kolmogorov-Smirnov 检验法进行拟合优度检验，看 <span
-class="math inline">\(\{R_n, \ n = 1, \, 2, \, ..., \, N\}\)</span>
-是否与 U[0,1] 分布相符。 4 把 <span class="math inline">\(\{R_n, \ n =
-1, \, 2, \, ..., \, N\}\)</span> 每 d 个组合在一起成为$ R^d$
-向量，把超立方体 {[0, 1]}^d 每一维均分为 k 份，得到 $k^d
-$个子集，用卡方检验法检验组合得到的 R^d 向量落在每个子集的概率是否近似为
-<span class="math inline">\(k^{−d}\)</span>。 5 把 <span
-class="math inline">\(\{R_n, \ n = 1, \, 2, \, ..., \, N\}\)</span>
-看作时间序列样本，计算其样本自相关函数列 <span
-class="math inline">\(\{\rho_j, \ j = 1, \, 2, \, ..., \, N\}，在 \{R_n,
-\ n = 1, \, 2, \, ..., \, N\}\)</span> 独立同分布情况下 <span
-class="math inline">\(\{\sqrt{N} \rho_j, \ j = 1, \, 2, \, ..., \,
-N\}\)</span> 应该渐近服从独立的标准正态分布。 6 把 <span
-class="math inline">\(\{R_n\}\)</span> 离散化为 <span
-class="math inline">\(y_n = floor(kR_n)\)</span>, <span
-class="math inline">\(\ n = 1, \, 2, \, ..., \, N\)</span>, 令 <span
-class="math inline">\(\xi_n = y_n, \, \eta_n = y_n+b（b 为正整数），n =
-1, \, 2, \, ..., \, N − b\)</span>, 用列联表检验法检验 <span
-class="math inline">\(\xi_n\)</span> 和 <span
-class="math inline">\(\eta_n\)</span> 的独立性。 7 扑克检验。把 <span
-class="math inline">\(\{R_n\}\)</span> 离散化为 <span
-class="math inline">\(y_n = floor(8R_n)\)</span>, <span
-class="math inline">\(\, n = 1, \, 2, \, ..., \, N,\)</span>
-然后每连续的 8 个作为一组，计数每组内不同数字的个数（1 ∼ 8 个）。在
-<span class="math inline">\(\{R_n\}\)</span>
-独立同均匀分布条件下每组内不同数字个数的理论分布概率可以计算出来，然后用卡方检验法检验实际观测与理论概率是否相符。
-8 配套检验。<span class="math inline">\(\{R_n\}\)</span> 离散化为 <span
-class="math inline">\(y_n = floor(kR_n)\)</span> （k 为正整数），<span
-class="math inline">\(n = 1, \, 2, \, ..., \, N\)</span>, 然后顺序抽取
-<span class="math inline">\(\{y_n, \ n = 1, \, 2, \, ..., \,
-N\}\)</span> 直到 <span class="math inline">\(\{y_n\}\)</span>
-的可能取值 <span class="math inline">\(\{0, \, 1, \, ..., \, k −
-1\}\)</span> 都出现过为止，记录需要抽取的 <span
-class="math inline">\(\{y_n\}\)</span> 的个数
-L，反复抽取并记录配齐数字需要抽取的值的个数 $l_j , j = 1, , 2, , ...
-$。在 <span class="math inline">\(\{R_n\}\)</span> 独立同 U(0,1)
-分布条件下这样的 L 分布可以得到，可以计算 <span
-class="math inline">\(\{l_j\}\)</span>
-的平均值并用渐近正态分布检验观测均值与理论均值的差异大小，或直接用卡方检验法比较
-<span class="math inline">\(\{l_j\}\)</span>的样本频数与理论期望值。 9
-正负连检验。令 <span class="math inline">\(y_n = R_n −
-1/2\)</span>，把连续的 <span class="math inline">\(\{y_n\}\)</span>
-的正值分为一段，把连续的 <span class="math inline">\(\{y_n\}\)</span>
-的负值分为一段，每段叫做一个 “连”，连长 L 的分布概率为 P(L = k) = <span
-class="math inline">\(2^{−k}, \ k = 1, \, 2, \,
-...\)</span>，可以用卡方检验法检验 L 的分布；总连数 T 满足</p>
-<p><span class="math inline">\(ET = (n+1)/2 \quad Var(T) =
-(n−1)/4\)</span> 也可以用 Z 检验法检验 T 的值与理论期望的差距。</p>
-<p>10 升降连检验。计算 <span class="math inline">\(y_n = R_n − R_{n−1},
-\ n = 2, \, 3, \, ..., \, N\)</span>，把连续的正值的 <span
-class="math inline">\(\{y_n\}\)</span>
-分为一段叫做一个上升连，把连续的负值的 <span
-class="math inline">\(\{y_n\}\)</span>
-分为一段叫做一个下降连，可以用卡方检验法比较连的长度与 <span
-class="math inline">\(\{R_n\}\)</span>S 独立同分布假设下的理论分布，或用
-Z 检验法比较总连数与理论期望值的差距。</p>
-<h4 id="乘同余法">乘同余法</h4>
-<h4 id="素数模乘同余法">素数模乘同余法</h4>
-<h3 id="三基于lsfr的梅森旋转算法">三、基于LSFR的梅森旋转算法</h3>
-<h3 id="四xorshift生成器家族">四、xorshift生成器家族</h3>
-<h3 id="五well家族的生成器">五、WELL家族的生成器</h3>
-<h2 id="基于密码安全的伪随机数算法">基于密码安全的伪随机数算法</h2>
-<h3 id="一分组密码">一、分组密码</h3>
-<h4 id="ecb">ECB</h4>
-<h4 id="cbc">CBC</h4>
-<h4 id="ctr">CTR</h4>
-<h4 id="cfb">CFB</h4>
-<h4 id="ofb">OFB</h4>
-<h3
-id="二微软的密码学应用编程接口函数">二、微软的密码学应用编程接口函数</h3>
-<h4 id="cryptgenrandom">CryptGenRandom</h4>
-<h4 id="yarrow-algorithm">Yarrow algorithm</h4>
-<h4 id="fortuna">Fortuna</h4>
-<h3 id="三基于数学难题假设的设计">三、基于数学难题假设的设计</h3>
-<h4 id="micalischnorr-generator">Micali–Schnorr generator</h4>
-<h4 id="naor-reingold伪随机函数">Naor-Reingold伪随机函数</h4>
-<h4 id="blum-blum-shub算法">Blum Blum Shub算法</h4>
-<h4 id="dual_ec_drbg">Dual_EC_DRBG</h4>
+<h2 id="day-1">Day 1</h2>
+<p>办理入职，熟悉环境。</p>
+<h2 id="day-2">Day 2</h2>
+<p>看守则和一些资料，下午有个Townhall，感觉还挺有意思的，当然如果是正式员工的话就更好了。</p>
+<h2 id="day-3">Day 3</h2>
 ]]></content>
-      <tags>
-        <tag>-random number</tag>
-      </tags>
+      <categories>
+        <category>生活</category>
+        <category>工作记录</category>
+      </categories>
   </entry>
   <entry>
     <title>test</title>
@@ -235,19 +143,111 @@ adipiscing elit.</p></li>
 ]]></content>
   </entry>
   <entry>
-    <title>Restart</title>
-    <url>/2022/05/27/8b221b533cba/</url>
-    <content><![CDATA[<p>临近毕业，找到了一家在外企的外包工作，还算是有了着落。</p>
+    <title>随机数算法原理整合(X种)</title>
+    <url>/2022/05/05/562477ea97af/</url>
+    <content><![CDATA[<p>本文主要整合了一些分别基于线性递归的伪随机数算法和基于密码安全的伪随机数算法原理，部分算法有代码实现。其中包括了：平方取中法、LCG算法(混合同余法、乘同余法、素数模乘同余法)、基于LSFR的梅森旋转算法、
+xorshift生成器家族和WELL家族的生成器；分组密码(ECB, CBC, CTR, CFB,
+OFB)、 微软的密码学应用编程接口函数CryptGenRandom，Yarrow
+algorithm、Fortuna、Micali–Schnorr
+generator、Naor-Reingold伪随机函数、Blum Blum
+Shub算法、Dual_EC_DRBG。</p>
 <span id="more"></span>
-<h2 id="day-1">Day 1</h2>
-<p>办理入职，熟悉环境。</p>
-<h2 id="day-2">Day 2</h2>
-<p>看守则和一些资料，下午有个Townhall，感觉还挺有意思的，当然如果是正式员工的话就更好了。</p>
-<h2 id="day-3">Day 3</h2>
+<h2 id="基于线性递归的随机数算法">基于线性递归的随机数算法</h2>
+<h3 id="一平方取中法">一、平方取中法</h3>
+<h3 id="二lcg算法">二、LCG算法</h3>
+<h4 id="混合同余法">混合同余法</h4>
+<p>1 对随机数列<span class="math inline">\(\{R_n, \ n = 1, \, 2, \, ...,
+\, N\}\)</span> 计算</p>
+<p><span class="math display">\[\bar{R}=\frac{1}{N} \sum_{n=1}^{N} R_n,
+\ \ \bar{R^2}=\frac{1}{N} \sum_{n=1}^{N}R_n^2, \ \ S^2=\frac{1}{N}
+\sum_{n=1}^{N}(R_n-\frac{1}{2})^2\]</span>
+假设我们产生的随机数的样本足够多，则 <span class="math inline">\(N
+\longrightarrow \infty\)</span> 时这三个统计量均渐近服从正态分布，可以用
+Z 检验法检验这三个统计量与理论期望值的偏离程度。</p>
+<p>2 把 [0, 1] 等分成 k 段，用拟合优度卡方检验法检验 <span
+class="math inline">\(\{R_n, \ n = 1, \, 2, \, ..., \, N\}\)</span>
+落在每一段的取值概率是否近似为 1/k。</p>
+<p>3 用 Kolmogorov-Smirnov 检验法进行拟合优度检验，看 <span
+class="math inline">\(\{R_n, \ n = 1, \, 2, \, ..., \, N\}\)</span>
+是否与 U[0,1] 分布相符。 4 把 <span class="math inline">\(\{R_n, \ n =
+1, \, 2, \, ..., \, N\}\)</span> 每 d 个组合在一起成为$ R^d$
+向量，把超立方体 {[0, 1]}^d 每一维均分为 k 份，得到 $k^d
+$个子集，用卡方检验法检验组合得到的 R^d 向量落在每个子集的概率是否近似为
+<span class="math inline">\(k^{−d}\)</span>。 5 把 <span
+class="math inline">\(\{R_n, \ n = 1, \, 2, \, ..., \, N\}\)</span>
+看作时间序列样本，计算其样本自相关函数列 <span
+class="math inline">\(\{\rho_j, \ j = 1, \, 2, \, ..., \, N\}，在 \{R_n,
+\ n = 1, \, 2, \, ..., \, N\}\)</span> 独立同分布情况下 <span
+class="math inline">\(\{\sqrt{N} \rho_j, \ j = 1, \, 2, \, ..., \,
+N\}\)</span> 应该渐近服从独立的标准正态分布。 6 把 <span
+class="math inline">\(\{R_n\}\)</span> 离散化为 <span
+class="math inline">\(y_n = floor(kR_n)\)</span>, <span
+class="math inline">\(\ n = 1, \, 2, \, ..., \, N\)</span>, 令 <span
+class="math inline">\(\xi_n = y_n, \, \eta_n = y_n+b（b 为正整数），n =
+1, \, 2, \, ..., \, N − b\)</span>, 用列联表检验法检验 <span
+class="math inline">\(\xi_n\)</span> 和 <span
+class="math inline">\(\eta_n\)</span> 的独立性。 7 扑克检验。把 <span
+class="math inline">\(\{R_n\}\)</span> 离散化为 <span
+class="math inline">\(y_n = floor(8R_n)\)</span>, <span
+class="math inline">\(\, n = 1, \, 2, \, ..., \, N,\)</span>
+然后每连续的 8 个作为一组，计数每组内不同数字的个数（1 ∼ 8 个）。在
+<span class="math inline">\(\{R_n\}\)</span>
+独立同均匀分布条件下每组内不同数字个数的理论分布概率可以计算出来，然后用卡方检验法检验实际观测与理论概率是否相符。
+8 配套检验。<span class="math inline">\(\{R_n\}\)</span> 离散化为 <span
+class="math inline">\(y_n = floor(kR_n)\)</span> （k 为正整数），<span
+class="math inline">\(n = 1, \, 2, \, ..., \, N\)</span>, 然后顺序抽取
+<span class="math inline">\(\{y_n, \ n = 1, \, 2, \, ..., \,
+N\}\)</span> 直到 <span class="math inline">\(\{y_n\}\)</span>
+的可能取值 <span class="math inline">\(\{0, \, 1, \, ..., \, k −
+1\}\)</span> 都出现过为止，记录需要抽取的 <span
+class="math inline">\(\{y_n\}\)</span> 的个数
+L，反复抽取并记录配齐数字需要抽取的值的个数 $l_j , j = 1, , 2, , ...
+$。在 <span class="math inline">\(\{R_n\}\)</span> 独立同 U(0,1)
+分布条件下这样的 L 分布可以得到，可以计算 <span
+class="math inline">\(\{l_j\}\)</span>
+的平均值并用渐近正态分布检验观测均值与理论均值的差异大小，或直接用卡方检验法比较
+<span class="math inline">\(\{l_j\}\)</span>的样本频数与理论期望值。 9
+正负连检验。令 <span class="math inline">\(y_n = R_n −
+1/2\)</span>，把连续的 <span class="math inline">\(\{y_n\}\)</span>
+的正值分为一段，把连续的 <span class="math inline">\(\{y_n\}\)</span>
+的负值分为一段，每段叫做一个 “连”，连长 L 的分布概率为 P(L = k) = <span
+class="math inline">\(2^{−k}, \ k = 1, \, 2, \,
+...\)</span>，可以用卡方检验法检验 L 的分布；总连数 T 满足</p>
+<p><span class="math inline">\(ET = (n+1)/2 \quad Var(T) =
+(n−1)/4\)</span> 也可以用 Z 检验法检验 T 的值与理论期望的差距。</p>
+<p>10 升降连检验。计算 <span class="math inline">\(y_n = R_n − R_{n−1},
+\ n = 2, \, 3, \, ..., \, N\)</span>，把连续的正值的 <span
+class="math inline">\(\{y_n\}\)</span>
+分为一段叫做一个上升连，把连续的负值的 <span
+class="math inline">\(\{y_n\}\)</span>
+分为一段叫做一个下降连，可以用卡方检验法比较连的长度与 <span
+class="math inline">\(\{R_n\}\)</span>S 独立同分布假设下的理论分布，或用
+Z 检验法比较总连数与理论期望值的差距。</p>
+<h4 id="乘同余法">乘同余法</h4>
+<h4 id="素数模乘同余法">素数模乘同余法</h4>
+<h3 id="三基于lsfr的梅森旋转算法">三、基于LSFR的梅森旋转算法</h3>
+<h3 id="四xorshift生成器家族">四、xorshift生成器家族</h3>
+<h3 id="五well家族的生成器">五、WELL家族的生成器</h3>
+<h2 id="基于密码安全的伪随机数算法">基于密码安全的伪随机数算法</h2>
+<h3 id="一分组密码">一、分组密码</h3>
+<h4 id="ecb">ECB</h4>
+<h4 id="cbc">CBC</h4>
+<h4 id="ctr">CTR</h4>
+<h4 id="cfb">CFB</h4>
+<h4 id="ofb">OFB</h4>
+<h3
+id="二微软的密码学应用编程接口函数">二、微软的密码学应用编程接口函数</h3>
+<h4 id="cryptgenrandom">CryptGenRandom</h4>
+<h4 id="yarrow-algorithm">Yarrow algorithm</h4>
+<h4 id="fortuna">Fortuna</h4>
+<h3 id="三基于数学难题假设的设计">三、基于数学难题假设的设计</h3>
+<h4 id="micalischnorr-generator">Micali–Schnorr generator</h4>
+<h4 id="naor-reingold伪随机函数">Naor-Reingold伪随机函数</h4>
+<h4 id="blum-blum-shub算法">Blum Blum Shub算法</h4>
+<h4 id="dual_ec_drbg">Dual_EC_DRBG</h4>
 ]]></content>
-      <categories>
-        <category>生活</category>
-        <category>工作记录</category>
-      </categories>
+      <tags>
+        <tag>-random number</tag>
+      </tags>
   </entry>
 </search>
