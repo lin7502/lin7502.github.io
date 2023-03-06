@@ -11,6 +11,6 @@ https://mintag.xyz/
 https://mintag.xyz/tags/random-number/
 https://mintag.xyz/categories/%E7%94%9F%E6%B4%BB/
 https://mintag.xyz/categories/Reading/
-https://mintag.xyz/categories/%E7%94%9F%E6%B4%BB/%E5%B7%A5%E4%BD%9C%E8%AE%B0%E5%BD%95/
 https://mintag.xyz/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B%E5%B8%88/
+https://mintag.xyz/categories/%E7%94%9F%E6%B4%BB/%E5%B7%A5%E4%BD%9C%E8%AE%B0%E5%BD%95/
 https://mintag.xyz/categories/Reading/Practical/
