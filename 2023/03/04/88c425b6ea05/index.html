@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.1.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-cd.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-cd.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-cd.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha256-Z1K5uhUaJXA7Ll0XrZ/0JhX4lAtZFpT6jkKrEDT0drU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"mintag.xyz","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.14.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":{"enable":true,"style":"default"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="计算机硬件基础 数的转换、数的表示、计算机的基本组成、指令和寻址方式、流水线、多级存储结构、可靠性和校验码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DB_chapter_1">
+<meta property="og:url" content="https://mintag.xyz/2023/03/04/88c425b6ea05/index.html">
+<meta property="og:site_name" content="Min&#39;s blog">
+<meta property="og:description" content="计算机硬件基础 数的转换、数的表示、计算机的基本组成、指令和寻址方式、流水线、多级存储结构、可靠性和校验码">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-03-04T04:03:37.000Z">
+<meta property="article:modified_time" content="2023-03-06T15:17:53.560Z">
+<meta property="article:author" content="Minix">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://mintag.xyz/2023/03/04/88c425b6ea05/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://mintag.xyz/2023/03/04/88c425b6ea05/","path":"2023/03/04/88c425b6ea05/","title":"DB_chapter_1"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>DB_chapter_1 | Min's blog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W5P6LR4K28"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-W5P6LR4K28","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?be88b4452af3a1b2263105a8dfa80574"></script>
+
+
+
+
+
+  <script async defer data-website-id="" src=""></script>
+
+  <script defer data-domain="" src=""></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Min's blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">锲而舍之，朽木不折</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">1</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">6</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A1%AC%E4%BB%B6%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">计算机硬件基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%80%BC%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.1.</span> <span class="nav-text">1. 数值转换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#r-%E5%8D%81%E8%BF%9B%E5%88%B6"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">R &lt;&#x3D;&gt; 十进制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6-%E5%85%AB%E8%BF%9B%E5%88%B6%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6"><span class="nav-number">1.1.0.2.</span> <span class="nav-text">二进制 &lt;&#x3D;&gt; 八进制，十六进制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E5%AD%98%E5%82%A8%E5%8D%95%E4%BD%8D"><span class="nav-number">1.1.0.3.</span> <span class="nav-text">数据的存储单位</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E8%A1%A8%E7%A4%BA"><span class="nav-number">1.2.</span> <span class="nav-text">2. 数据的表示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90"><span class="nav-number">1.3.</span> <span class="nav-text">3. 计算机的基本组成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%AF%E8%AF%BA%E4%BE%9D%E6%9B%BC%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E7%BB%93%E6%9E%84"><span class="nav-number">1.3.0.1.</span> <span class="nav-text">冯·诺依曼计算机系统结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.3.0.2.</span> <span class="nav-text">基本概念</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F"><span class="nav-number">1.4.</span> <span class="nav-text">4. 指令、寻址方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="nav-number">1.5.</span> <span class="nav-text">5. 流水线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E7%BA%A7%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="nav-number">1.6.</span> <span class="nav-text">6. 多级存储结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%9D%A0%E6%80%A7%E6%A0%A1%E9%AA%8C%E7%A0%81"><span class="nav-number">1.7.</span> <span class="nav-text">7. 可靠性、校验码</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Minix"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Minix</p>
+  <div class="site-description" itemprop="description">别当烂人</div>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lin7502" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lin7502" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xum7502@gmail.com" title="E-Mail → mailto:xum7502@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://mintag.xyz/2023/03/04/88c425b6ea05/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Minix">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Min's blog">
+      <meta itemprop="description" content="别当烂人">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="DB_chapter_1 | Min's blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DB_chapter_1
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-03-04 12:03:37" itemprop="dateCreated datePublished" datetime="2023-03-04T12:03:37+08:00">2023-03-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-03-06 23:17:53" itemprop="dateModified" datetime="2023-03-06T23:17:53+08:00">2023-03-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B%E5%B8%88/" itemprop="url" rel="index"><span itemprop="name">数据库系统工程师</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="firestore-visitors-count"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="计算机硬件基础">计算机硬件基础</h1>
+<p>数的转换、数的表示、计算机的基本组成、指令和寻址方式、流水线、多级存储结构、可靠性和校验码
+<span id="more"></span></p>
+<h2 id="数值转换">1. 数值转换</h2>
+<p>基本概念：数制，基数，数码，数位，位权</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">十进制D</th>
+<th style="text-align: center;">二进制B</th>
+<th style="text-align: center;">八进制Q</th>
+<th style="text-align: center;">十六进制H</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">基本数码</td>
+<td style="text-align: center;">0-9</td>
+<td style="text-align: center;">0, 1</td>
+<td style="text-align: center;">0-7</td>
+<td style="text-align: center;">0-9, A-F</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">基数</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">位权</td>
+<td style="text-align: center;">10<sup>n</sup></td>
+<td style="text-align: center;">2<sup>n</sup></td>
+<td style="text-align: center;">8<sup>n</sup></td>
+<td style="text-align: center;">16<sup>n</sup></td>
+</tr>
+</tbody>
+</table>
+<h4 id="r-十进制">R &lt;=&gt; 十进制</h4>
+<p>R 转 十进制，位权展开法，就是数码乘以位权后相加，例如：</p>
+<blockquote>
+<p>D: 1110 =&gt; 1 <span class="math inline">\(\times\)</span>
+2<sup>3</sup> <span class="math inline">\(+\)</span> 1 <span
+class="math inline">\(\times\)</span> 2<sup>2</sup> <span
+class="math inline">\(+\)</span> 1 <span
+class="math inline">\(\times\)</span> 2<sup>1</sup> <span
+class="math inline">\(+\)</span> 0 <span
+class="math inline">\(\times\)</span> 2<sup>0</sup> <span
+class="math inline">\(=\)</span> 14 Q: 765 =&gt; 7 <span
+class="math inline">\(\times\)</span> 8<sup>2</sup> <span
+class="math inline">\(+\)</span> 6 <span
+class="math inline">\(\times\)</span> 8<sup>1</sup> <span
+class="math inline">\(+\)</span> 5 <span
+class="math inline">\(\times\)</span> 8<sup>0</sup> <span
+class="math inline">\(=\)</span> 501 H: DEF9 =&gt; 13 <span
+class="math inline">\(\times\)</span> 16<sup>3</sup> <span
+class="math inline">\(+\)</span> 14 <span
+class="math inline">\(\times\)</span> 16<sup>2</sup> <span
+class="math inline">\(+\)</span> 15 <span
+class="math inline">\(\times\)</span> 16<sup>1</sup> <span
+class="math inline">\(+\)</span> 9 <span
+class="math inline">\(\times\)</span> 16<sup>0</sup> <span
+class="math inline">\(=\)</span> 57081</p>
+</blockquote>
+<p>十进制 转
+R进制，短除法，就是用十进制数除基数，将其余数从右开始往左排，直到最后的商小于等于基数，把商写在左侧最高位，例如：</p>
+<blockquote>
+<p>Q: 501 <span class="math inline">\(\div\)</span> 8 <span
+class="math inline">\(=\)</span> 62 <span
+class="math inline">\(...\)</span> 5 <span
+class="math inline">\(\quad\)</span> 62 <span
+class="math inline">\(\div\)</span> 8 <span
+class="math inline">\(=\)</span> 7 <span
+class="math inline">\(...\)</span> 6 <span
+class="math inline">\(\quad\)</span> =&gt; 765</p>
+</blockquote>
+<h4 id="二进制-八进制十六进制">二进制 &lt;=&gt; 八进制，十六进制</h4>
+<p>三位二进制可表示所有八进制数码，四位二进制可表示所有十六进制数码。即，两位的八进制数需要六位二进制数分两组来表示，两位的十六进制数需要八位二进制数分两组表示，三位及以上以此类推，例如：</p>
+<blockquote>
+<p>Q: 111110 &lt;=&gt; 76 H: 10110110 &lt;=&gt; B6</p>
+</blockquote>
+<p>八进制和十六进制的转换需要通过二进制作为中间转换来完成。</p>
+<h4 id="数据的存储单位">数据的存储单位</h4>
+<p>位 b bit 字节 B byte</p>
+<p><span class="math display">\[
+\begin{gather*}
+1B &amp;=&amp; 8bit \\
+1KB &amp;=&amp; 2^{10}B &amp;=&amp; 1024B \\
+1MB &amp;=&amp; 2^{20}KB &amp;=&amp; 1024KB \\
+1GB &amp;=&amp; 2^{30}MB &amp;=&amp; 1024MB \\
+1TB &amp;=&amp; 2^{40}GB  &amp;=&amp; 1024GB \\
+\end{gather*}
+\]</span></p>
+<h2 id="数据的表示">2. 数据的表示</h2>
+<p><strong>机器数</strong>用真值表示，有正负号，补码常用于加减法运算(部分计算机数的表示、存储)，移码常用于浮点数的阶码。</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">码制</th>
+<th style="text-align: right;">数值+1</th>
+<th style="text-align: right;">数值-1</th>
+<th style="text-align: right;">1+(-1)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">原码</td>
+<td style="text-align: right;">0000 0001</td>
+<td style="text-align: right;">1000 0001</td>
+<td style="text-align: right;">1000 0010</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">反码</td>
+<td style="text-align: right;">0000 0001</td>
+<td style="text-align: right;">1111 1110</td>
+<td style="text-align: right;">1111 1111</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">补码</td>
+<td style="text-align: right;">0000 0001</td>
+<td style="text-align: right;">1111 1111</td>
+<td style="text-align: right;">0000 0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">移码</td>
+<td style="text-align: right;">1000 0001</td>
+<td style="text-align: right;">0111 1111</td>
+<td style="text-align: right;">1000 0000</td>
+</tr>
+</tbody>
+</table>
+<p>其中，最高位为符号位，0 表示正，1
+表示负，反码的负数为原码的数值取反，补码的负数为反码的数值加
+1，符号位均不变，而移码是补码符号位取反，数值不变。</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">整数数值范围</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">原码</td>
+<td style="text-align: center;"><span class="math inline">\(-(2^{n-1}-1)
+\sim 2^{n-1}-1\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">反码</td>
+<td style="text-align: center;"><span class="math inline">\(-(2^{n-1}-1)
+\sim 2^{n-1}-1\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">补码</td>
+<td style="text-align: center;"><span class="math inline">\(-2^{n-1}
+\sim 2^{n-1}-1\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">移码</td>
+<td style="text-align: center;"><span class="math inline">\(-2^{n-1}
+\sim 2^{n-1}-1\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong><a
+target="_blank" rel="noopener" href="https://blog.csdn.net/Sivan56/article/details/120044357?spm=1001.2101.3001.6650.3&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-3-120044357-blog-125330631.pc_relevant_multi_platform_whitelistv3&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-3-120044357-blog-125330631.pc_relevant_multi_platform_whitelistv3&amp;utm_relevant_index=6">关于取值范围的解释</a></strong>
+<br> <strong>定点数与浮点数</strong> 定点整数：小数点固定在最后
+定点小数：小数点固定在符号位和数值之间 浮点数：<span
+class="math inline">\(N=R^e *
+M\)</span>，M为<strong>尾数</strong>(决定数值表示的<strong>精度</strong>)，e为<strong>指数</strong>(阶码，决定数值表示的<strong>范围</strong>)，R为基数(阶码的底)，例如：
+&gt; <span class="math inline">\(12.3 = 10^2 \times 0.123\)</span></p>
+<p>浮点数的计算流程：对阶-&gt;尾数计算-&gt;结果格式化，例如： &gt; 计算
+<span class="math inline">\(10^2 \times 0.123 + 10^3 \times
+0.001\)</span> &gt; 对阶(小阶对大阶)：<span class="math inline">\(10^3
+\times 0.0123 + 10^3 \times 0.001\)</span> &gt; 尾数计算：<span
+class="math inline">\(10^3 \times (0.0123 + 0.001)\)</span> &gt;
+结果格式化</p>
+<h2 id="计算机的基本组成">3. 计算机的基本组成</h2>
+<h4 id="冯诺依曼计算机系统结构">冯·诺依曼计算机系统结构</h4>
+<p><img
+src="https://s3.bmp.ovh/imgs/2023/03/06/a8822d8e30251a97.png" /></p>
+<p>运算器： 1. 算术逻辑单元ALU：数据的算术运算和逻辑运算 2.
+累加寄存器AC：通用寄存器，为ALU提供一个工作区，用在暂存数据 3.
+数据缓冲寄存器DR：写内存时，暂存指令或数据 4.
+状态条件寄存器PSW：存状态标志与控制标志</p>
+<p>控制器： 1. 程序计数器PC：存储下一条要执行指令的地址 2.
+指令寄存器IR：存储即将执行的指令 3. 指令译码器ID：对操作码进行分析解释
+4. 时序部件：提供时序控制信号中的操作码字段</p>
+<p>指令包含操作码和地址码，操作码例如加减乘除。</p>
+<h4 id="基本概念">基本概念</h4>
+<p><strong>CPU 的性能指标</strong> 主频、字长、CPU缓存、核心数量</p>
+<p><strong>总线的分类</strong> 数据总线(Data
+Bus，双向)：在CPU与RAM之间来回传送需要处理或储存的数据 控制总线(Control
+Bus，单向)：将微处理器控制单元(Control Unit)的信号传送到周边设备
+地址总线(Address Bus)：用来指定在RAM(Random Access
+Memory)之中存储数据的地址</p>
+<p>一条总线同一时刻仅允许一个设备发送，但允许多个设备接收。</p>
+<p><strong>总线的性能指标</strong> 带宽(B/s)、位宽(B)、工作频率( f:
+单位Hz, 1/s)</p>
+<p><span class="math display">\[带宽=位宽\times工作频率\]</span></p>
+<p>计算时通常牵涉单位换算。</p>
+<p><strong>BIOS/CMOS</strong> ROM/RAM <strong>系统性能测评方法</strong>
+时钟频率、指令执行、等效指令速度、数据处理速率(PDR)、核心程序法、基准测试程序</p>
+<h2 id="指令寻址方式">4. 指令、寻址方式</h2>
+<p><strong>指令</strong>
+一条指令就是机器语言的一个语句，是一组有意义的二进制代码；其中操作码字段OP指出计算机要执行什么运算，地址码字段A包含个操作数的地址及操作结果的存放地址等。
+<strong><a
+target="_blank" rel="noopener" href="https://blog.csdn.net/m0_58367586/article/details/124925263">详解指令系统</a></strong></p>
+<p>4 地址指令：A1 OP A2 -&gt; A3 A4为下一条要执行的指令</p>
+<table>
+<thead>
+<tr class="header">
+<th>OP</th>
+<th>A1</th>
+<th>A2</th>
+<th>A3</th>
+<th>A4</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>3 地址指令：A4 用 PC 替换</p>
+<table>
+<thead>
+<tr class="header">
+<th>OP</th>
+<th>A1</th>
+<th>A2</th>
+<th>A3</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>2 地址指令：A3 用 AC 替换</p>
+<table>
+<thead>
+<tr class="header">
+<th>OP</th>
+<th>A1</th>
+<th>A2</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>1 地址指令：将 A1 或A2 先存放在 AC中，如 A1 OP AC -&gt; AC</p>
+<table>
+<thead>
+<tr class="header">
+<th>OP</th>
+<th>A1</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>0 地址指令：使用堆栈 push/pop，不需要地址</p>
+<table>
+<thead>
+<tr class="header">
+<th>OP</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p><strong>寻址方式</strong>
+一条指令无法访问所有内存，为了扩大寻址空间，也为了增加编程的灵活性，所以有了不同的寻址方式。
+<strong><a
+target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/370204019">详解寻址方式</a></strong></p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>立即寻址方式</td>
+<td>操作数直接在指令中，速度快，灵活性差</td>
+</tr>
+<tr class="even">
+<td>直接寻址方式</td>
+<td>指令中存放的是操作数的地址</td>
+</tr>
+<tr class="odd">
+<td>间接寻址方式</td>
+<td>指令中存放了一个地址，这个地址对应的内容是操作数的地址</td>
+</tr>
+<tr class="even">
+<td>寄存器寻址方式</td>
+<td>寄存器存放操作数</td>
+</tr>
+<tr class="odd">
+<td>寄存器间接寻址方式</td>
+<td>寄存器内存放的是操作数的地址</td>
+</tr>
+</tbody>
+</table>
+<h2 id="流水线">5. 流水线</h2>
+<h2 id="多级存储结构">6. 多级存储结构</h2>
+<h2 id="可靠性校验码">7. 可靠性、校验码</h2>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Buy me a coffee</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.png" alt="Minix 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="Minix 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/images/paypal.png" alt="Minix PayPal">
+        <span>PayPal</span>
+      </div>
+
+  </div>
+</div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/01/07/85c6b6daca14/" rel="next" title="HOW TO READ A BOOK">
+                  HOW TO READ A BOOK <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2022 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa-solid fa-dragon"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Minix</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">10k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">9 分钟</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.2.2/mermaid.min.js","integrity":"sha256-o5AUfgOkNFWuInA78GVCoVdGoN9eTaB3Hxu+ep7TTrY="}}</script>
+  <script src="/js/third-party/tags/mermaid.js"></script>
+
+
+
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.14.0/firebase-app-compat.js" integrity="sha256-9fuLFr3ejOEKWkdScSr6YpfK+PGTHGCEyXjpNTMk7To=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.14.0/firebase-firestore-compat.js" integrity="sha256-8LnvBJcioBFBHkk/Xn8U2lUMp8ispXCISYUxgwPNffs=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="firestore" type="application/json">{"enable":true,"collection":"articles","apiKey":"AIzaSyDd9nN-1PJUIPIgecTwggk6wyfbHDjk7TE","projectId":"lin7502-6e35e"}</script>
+  <script src="/js/third-party/statistics/firestore.js"></script>
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"lin7502","repo":"comments","client_id":"d71d5bf9990fb1ee6b55","client_secret":"caab0d3b0b024c5929734e705215937d28f6c860","admin_user":"lin7502","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"889d27cf58f1e8cb1cb87727ac96b154"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
